@@ -44,6 +44,16 @@ const tests = {
         assert.equal(results.children[0].text, 'Section 1');
     },
 
+    twoH2sWithElementsToIgnoreInOne() {
+        const toc = new Toc(`
+                <h1>Page Title</h1>
+                    <h2 id="section1">Section 1</h2>
+                    <h2 id="section2">Section 2 <a class="permalink">#</a></h2>
+        `, {ignoredElements: ['.permalink']})
+        const results = toc.get();
+        assert.equal(results.children[1].text, 'Section 2')
+    },
+
     withHeadingTextOptions() {
         const toc = new Toc(`<h2 id="foo">Foo</h2>`, {headingText: 'Sections'});
         const html = toc.html();
