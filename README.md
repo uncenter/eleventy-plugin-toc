@@ -1,5 +1,7 @@
 # Table of Contents (nesting) Eleventy Plugin
 
+[![npm](https://img.shields.io/npm/v/eleventy-plugin-nesting-toc?style=for-the-badge)](https://www.npmjs.com/package/eleventy-plugin-nesting-toc)
+
 This Eleventy plugin will generate a (property nested) TOC from page content using an Eleventy filter.
 
 HTML:
