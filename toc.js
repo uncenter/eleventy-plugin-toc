@@ -39,20 +39,16 @@ class Item {
     html() {
         let markup = "";
         if (this.slug && this.text) {
-            markup += `
-                    <li><a href="#${this.slug}">${this.text}</a>
-            `;
+            markup += `<li><a href="#${this.slug}">${this.text}</a>`;
         }
         if (this.children.length > 0) {
-            markup += `
-                ${this.options.ul ? "<ul>" : "<ol>"}
-                    ${this.children.map((item) => item.html()).join("\n")}
-                ${this.options.ul ? "</ul>" : "</ol>"}
-            `;
+            markup += `${this.options.ul ? "<ul>" : "<ol>"}${this.children
+                .map((item) => item.html())
+                .join("\n")}${this.options.ul ? "</ul>" : "</ol>"}`;
         }
 
         if (this.slug && this.text) {
-            markup += "\t\t</li>";
+            markup += "</li>";
         }
 
         return markup;
