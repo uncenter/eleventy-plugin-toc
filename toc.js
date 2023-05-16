@@ -24,7 +24,8 @@ function getParent(prev, current) {
 }
 
 class Item {
-    constructor($el) {
+    constructor({ $el = null, options }) {
+        this.options = options;
         if ($el) {
             this.slug = $el.attr("id");
             this.text = $el.text().trim();
@@ -62,7 +63,7 @@ class Toc {
     constructor(htmlstring = "", options = defaults) {
         this.options = { ...defaults, ...options };
         const selector = this.options.tags.join(",");
-        this.root = new Item();
+        this.root = new Item({ options: this.options });
         this.root.parent = this.root;
 
         const $ = cheerio.load(htmlstring);
@@ -77,7 +78,10 @@ class Toc {
         if (headings.length) {
             let previous = this.root;
             headings.each((index, heading) => {
-                const current = new Item($(heading));
+                const current = new Item({
+                    $el: $(heading),
+                    options: this.options,
+                });
                 const parent = getParent(previous, current);
                 current.parent = parent;
                 parent.children.push(current);
