@@ -1,26 +1,24 @@
-const cheerio = require('cheerio');
-
-/** Attribute which if found on a heading means the heading is excluded */
-const ignoreAttribute = 'data-toc-exclude';
+const cheerio = require("cheerio");
 
 const defaults = {
-    tags: ['h2', 'h3', 'h4'],
+    tags: ["h2", "h3", "h4"],
+    ignoredHeadings: ["[data-toc-exclude]"],
     ignoredElements: [],
-    wrapper: 'nav',
-    wrapperClass: 'toc',
-    headingText: '',
-    headingTag: 'h2'
+    ul: false,
+    wrapper: function (toc) {
+        return `<nav class="toc">${toc}</nav>`;
+    },
 };
 
 function getParent(prev, current) {
     if (current.level > prev.level) {
-        //child heading
+        // Child of previous
         return prev;
     } else if (current.level === prev.level) {
-        //sibling of previous
+        // Sibling of previous
         return prev.parent;
     } else {
-        //above the previous
+        // Above the previous
         return getParent(prev.parent, current);
     }
 }
@@ -28,7 +26,7 @@ function getParent(prev, current) {
 class Item {
     constructor($el) {
         if ($el) {
-            this.slug = $el.attr('id');
+            this.slug = $el.attr("id");
             this.text = $el.text().trim();
             this.level = +$el.get(0).tagName.slice(1);
         } else {
@@ -38,7 +36,7 @@ class Item {
     }
 
     html() {
-        let markup = '';
+        let markup = "";
         if (this.slug && this.text) {
             markup += `
                     <li><a href="#${this.slug}">${this.text}</a>
@@ -46,14 +44,14 @@ class Item {
         }
         if (this.children.length > 0) {
             markup += `
-                <ol>
-                    ${this.children.map(item => item.html()).join('\n')}
-                </ol>
+                ${this.options.ul ? "<ul>" : "<ol>"}
+                    ${this.children.map((item) => item.html()).join("\n")}
+                ${this.options.ul ? "</ul>" : "</ol>"}
             `;
         }
 
         if (this.slug && this.text) {
-            markup += '\t\t</li>'
+            markup += "\t\t</li>";
         }
 
         return markup;
@@ -61,20 +59,20 @@ class Item {
 }
 
 class Toc {
-    constructor(htmlstring = '', options = defaults) {
-        this.options = {...defaults, ...options};
-        const selector = this.options.tags.join(',');
+    constructor(htmlstring = "", options = defaults) {
+        this.options = { ...defaults, ...options };
+        const selector = this.options.tags.join(",");
         this.root = new Item();
         this.root.parent = this.root;
 
         const $ = cheerio.load(htmlstring);
 
-        const headings = $(selector)
-            .filter('[id]')
-            .filter(`:not([${ignoreAttribute}])`);
+        let headings = $(selector).filter("[id]"); // Make sure heading has an ID (for linking)
+        this.options.ignoredHeadings.forEach((selector) => {
+            headings = headings.filter(`:not(${selector})`); // Remove ignored elements
+        });
 
-        const ignoredElementsSelector = this.options.ignoredElements.join(',')
-        headings.find(ignoredElementsSelector).remove()
+        headings.find(this.options.ignoredElements.join(",")).remove(); // Remove ignored elements from heading text content
 
         if (headings.length) {
             let previous = this.root;
@@ -84,7 +82,7 @@ class Toc {
                 current.parent = parent;
                 parent.children.push(current);
                 previous = current;
-            })
+            });
         }
     }
 
@@ -93,21 +91,13 @@ class Toc {
     }
 
     html() {
-        const {wrapper, wrapperClass, headingText, headingTag} = this.options;
+        const { wrapper } = this.options;
         const root = this.get();
-
-        let html = '';
-
         if (root.children.length) {
-
-            if (headingText) {
-                html += `<${headingTag}>${headingText}</${headingTag}>\n`;
-            }
-
-            html += `<${wrapper} class="${wrapperClass}">${root.html()}</${wrapper}>`;
+            // Only return markup if there are headings
+            return wrapper(root.html());
         }
-
-        return html;
+        return "";
     }
 }
 
