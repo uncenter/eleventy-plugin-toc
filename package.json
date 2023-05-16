@@ -1,6 +1,6 @@
 {
     "name": "@uncenter/eleventy-plugin-toc",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Eleventy plugin for generating a table of contents from headings in your content, with many options for customisation.",
     "main": ".eleventy.js",
     "scripts": {
