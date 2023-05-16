@@ -1,102 +1,116 @@
-# Table of Contents (nesting) Eleventy Plugin
+# @uncenter/eleventy-plugin-toc
 
-[![npm](https://img.shields.io/npm/v/eleventy-plugin-nesting-toc?style=for-the-badge)](https://www.npmjs.com/package/eleventy-plugin-nesting-toc)
-
-This Eleventy plugin will generate a (property nested) TOC from page content using an Eleventy filter.
+Easily generate a table of contents (toc) for your Eleventy site, with easy configuration and customization.
 
 HTML:
+
 ```html
 <h1>Hello, World</h1>
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad animi assumenda consequuntur debitis ea eligendi eos hic necessitatibus, odio recusandae rem similique, totam unde. Asperiores cumque facere nisi quibusdam vitae.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 
 <h2 id="greetings-from-mars">Greetings from Mars</h2>
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aperiam at blanditiis dolorem ea, eius impedit maxime non omnis quia repudiandae sit, suscipit vel veniam voluptas. Dignissimos eos porro sit.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 
 <h3 id="the-red-planet">The red planet</h3>
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequatur dicta doloremque est iure minima placeat recusandae sit. Dolorum quis quod sequi! Commodi cupiditate debitis, dolore error excepturi nulla optio.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 
 <h2 id="greetings-from-pluto">Greetings from Pluto</h2>
-
 ```
 
 Generated TOC:
-* [Greetings from Mars](#greetings-from-mars)
-  * [The red planet](#the-red-planet)
-* [Greetings from Pluto](#greetings-from-pluto)
+
+-   [Greetings from Mars](#greetings-from-mars)
+    -   [The red planet](#the-red-planet)
+-   [Greetings from Pluto](#greetings-from-pluto)
+
 ```html
 <nav class="toc">
-<ol>
-    <li><a href="#greetings-from-mars">Greetings from Mars</a></li>
     <ol>
-        <li><a href="#the-red-planet">The red planet</a></li>
+        <li><a href="#greetings-from-mars">Greetings from Mars</a></li>
+        <ol>
+            <li><a href="#the-red-planet">The red planet</a></li>
+        </ol>
+        <li><a href="#greetings-from-pluto">Greetings from Pluto</a></li>
     </ol>
-    <li><a href="#greetings-from-pluto">Greetings from Pluto</a></li>
-</ol>
 </nav>
-
 ```
 
 <hr>
 
-# This Readme
+# Table of Contents
 
-* [Options](#options)
-* [Install](#install)
-  * [Adding it to Eleventy](#adding-it-to-the-eleventy-engine)
-  * [Using the filter](#using-the-provided-filter)
-  * [Configuring](#configuring)
-* [Gotchyas](#gotchyas)
-
-
-## Options
-
-```javascript
-const defaults = {
-  tags: ['h2', 'h3', 'h4'], // Which heading tags are selected (headings must each have an ID attribute)
-  ignoredElements: [],  // Elements to ignore when constructing the label for every header (useful for ignoring permalinks, must be selectors)
-  wrapper: 'nav',       // Element to put around the root `ol`
-  wrapperClass: 'toc',  // Class for the element around the root `ol`
-  headingText: '',      // Optional text to show in heading above the wrapper element
-  headingTag: 'h2'      // Heading tag when showing heading above the wrapper element
-}
-```
+-   [@uncenter/eleventy-plugin-toc](#uncentereleventy-plugin-toc)
+-   [Table of Contents](#table-of-contents)
+    -   [Install](#install)
+    -   [Usage](#usage)
+        -   [Using the provided filter](#using-the-provided-filter)
+        -   [Configuring](#configuring)
+    -   [Gotchyas](#gotchyas)
 
 ## Install
 
-```sh
-npm i --save eleventy-plugin-nesting-toc
-```
+<table>
+    <tr>
+        <td>Package Manager</td>
+        <td>Command</td>
+    </tr>
+    <tr>
+        <td>npm</td>
+        <td>
+            <pre lang="sh">npm i @uncenter/eleventy-plugin-toc</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>yarn</td>
+        <td>
+            <pre lang="sh">yarn add @uncenter/eleventy-plugin-toc</pre>
+        </td>
+    </tr>
+    <tr>
+        <td>pnpm</td>
+        <td>
+            <pre lang="sh">pnpm add @uncenter/eleventy-plugin-toc</pre>
+        </td>
+    </tr>
+</table>
 
 ## Usage
 
-### Adding it to the Eleventy Engine
+Your heading tags will need to have `id`s on them, so that the TOC can provide proper anchor links to them. Eleventy does not do this for you out of the box. You can use a plugin like [markdown-it-anchor](https://www.npmjs.com/package/markdown-it-anchor) to add those `id`s to the headings automagically (or a similar plugin for your Markdown engine of choice).
 
-**IMPORTANT NOTE**: Your heading tags will need to have `id`s on them, so that the TOC can provide proper anchor links to them. Eleventy does not do this for you ootb. You can use a plugin like [markdown-it-anchor](https://www.npmjs.com/package/markdown-it-anchor) to add those `id`s to the headings automagically
+> **Note**
+> Make sure not to duplicate the `module.exports` line in your config file for any of the examples below! If you already have a `module.exports` line, just add the lines above and below it to your config file.
 
-```diff
-// .eleventy.js
+```js
+// .eleventy.js / eleventy.config.(c)js
+const markdownIt = require('markdown-it');
+const markdownItAnchor = require('markdown-it-anchor');
 module.exports = function (eleventyConfig) {
-  //...
-+ const pluginTOC = require('eleventy-plugin-nesting-toc');
-+ eleventyConfig.addPlugin(pluginTOC);
-
-  // Example Markdown configuration (to add IDs to the headers)
-  const markdownIt = require('markdown-it');
-  const markdownItAnchor = require('markdown-it-anchor');
-  eleventyConfig.setLibrary("md",
-      markdownIt({
-          html: true,
-          linkify: true,
-          typographer: true,
-      }).use(markdownItAnchor, {})
-  );
-  //...
+    eleventyConfig.setLibrary("md",
+        markdownIt({
+            html: true,
+            linkify: true,
+            typographer: true,
+        }).use(markdownItAnchor, {})
+        );
+    };
 }
+```
+
+Then add the TOC plugin to your Eleventy config:
+
+```js
+// .eleventy.js / eleventy.config.(c)js
+const pluginTOC = require("@uncenter/eleventy-plugin-toc");
+
+module.exports = function (eleventyConfig) {
+    eleventyConfig.addPlugin(pluginTOC);
+};
 ```
 
 ### Using the provided filter
 
-```nunjucks
+```twig
 <aside>
   {{ content | toc | safe }}
 </aside>
@@ -107,38 +121,47 @@ module.exports = function (eleventyConfig) {
 
 ### Configuring
 
-You can override any of the [options](#options) at the time that you call it, or when you add it to the eleventy engine. All the options will be merged together, with the precedence being `when invoking the filter > .eleventy.js > defaults`.
+You can override some of the [options](#options) at the time that you call it, or all of them when you add it in your Eleventy config.
+All of the options will be merged together, with the options passed to the filter taking precedence over the options passed to the plugin (which take precedence over the defaults).
 
-Override the defaults for your whole site:
+Override the defaults for your whole site (defaults are shown below):
 
-```diff
+```js
+// .eleventy.js / eleventy.config.(c)js
+const pluginTOC = require("@uncenter/eleventy-plugin-toc");
+
 module.exports = function (eleventyConfig) {
-  //...
-+ const pluginTOC = require('eleventy-plugin-nesting-toc');
-+ eleventyConfig.addPlugin(pluginTOC, {tags: ['h2']});
-  //...
-}
+    eleventyConfig.addPlugin(pluginTOC, {
+        tags: ["h2", "h3", "h4"], // the tags (heading levels) to include in the TOC
+        ignoredHeadings: ["[data-toc-exclude]"], // the headings to ignore when generating the TOC (list of selectors)
+        ignoredElements: [], // the elements (within the headings) to ignore when generating the TOC (list of selectors)
+        ul: false, // whether to a use ul or ol
+        wrapper: function (toc) {
+            // the wrapper to use around the generated TOC
+            return `<nav class="toc">${toc}</nav>`;
+        },
+    });
+};
 ```
 
 And override those just for one template, as it's being invoked
 
-```nunjucks
+```twig
 <aside>
-  {{ content | toc(tags=['h2', 'h3'], wrapperClass='fixed toc') | safe }}
+  {{ content | toc(tags=['h2', 'h3']) | safe }}
 </aside>
 ```
 
-If you have specific headings which you don't want to be included in the TOC, you can add the `data-toc-exclude` attribute to exclude these headings.
+If you have specific headings which you don't want to be included in the TOC, you can add one of the `ignoredElements` selectors to exclude these headings (defaults to the`[data-toc-exclude]` selector).
 
-One way to add this attribute is via the use of the <a href="https://www.npmjs.com/package/markdown-it-attrs" target="_blank" rel="noopener">markdown-it-attrs</a> npm package.
-```markdown
-### Level 3 heading to ignore {data-toc-exclude}
+One way to add this attribute is via the use of the [markdown-it-attrs](https://www.npmjs.com/package/markdown-it-attrs) plugin:
+
+```md
+## Heading {data-toc-exclude}
 ```
-
 
 ## Gotchyas
 
-A few things must be in place for this to work properly, and provide the proper nested structure
+A few things must be in place for this to work properly, and provide the proper nested structure:
 
-* The first matched heading on the page should be the topmost. _Don't put an h3 before an h2_.
-* you can only use actual heading tags. _Don't use `tags=['section']`, etc._
+-   The first matched heading on the page should be the topmost. _Don't put an `<h3>` before an `<h2>`!_
