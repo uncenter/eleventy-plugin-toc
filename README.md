@@ -1,5 +1,7 @@
 # @uncenter/eleventy-plugin-toc
 
+> This repository is an updated fork of [JordanShurmer/eleventy-plugin-nesting-toc](https://github.com/JordanShurmer/eleventy-plugin-nesting-toc) with some additional features and bug fixes.
+
 Easily generate a table of contents (toc) for your Eleventy site, with easy configuration and customization.
 
 HTML:
@@ -39,11 +41,13 @@ Generated TOC:
 
 # Table of Contents
 
--   [Install](#install)
--   [Usage](#usage)
-    -   [Using the provided filter](#using-the-provided-filter)
-    -   [Configuring](#configuring)
--   [Gotchyas](#gotchyas)
+-   [@uncenter/eleventy-plugin-toc](#uncentereleventy-plugin-toc)
+-   [Table of Contents](#table-of-contents)
+    -   [Install](#install)
+    -   [Usage](#usage)
+        -   [Using the provided filter](#using-the-provided-filter)
+        -   [Configuring](#configuring)
+    -   [Gotchyas](#gotchyas)
 
 ## Install
 
@@ -77,7 +81,7 @@ Generated TOC:
 Your heading tags will need to have `id`s on them, so that the TOC can provide proper anchor links to them. Eleventy does not do this for you out of the box. You can use a plugin like [markdown-it-anchor](https://www.npmjs.com/package/markdown-it-anchor) to add those `id`s to the headings automagically (or a similar plugin for your Markdown engine of choice).
 
 > **Note**
-> 
+>
 > Make sure not to duplicate the `module.exports` line in your config file for any of the examples below! If you already have a `module.exports` line, just add the lines above and below it to your config file.
 
 ```js
