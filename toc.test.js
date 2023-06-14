@@ -1,16 +1,5 @@
 const Toc = require("./toc");
 
-// Default options for reference:
-// const defaults = {
-//     tags: ["h2", "h3", "h4"],
-//     ignoredHeadings: ["[data-toc-exclude]"],
-//     ignoredElements: [],
-//     ul: false,
-//     wrapper: function (toc) {
-//         return `<nav class="toc">${toc}</nav>`;
-//     },
-// };
-
 test("ignores headings without anchors", () => {
     const toc = new Toc(
         `
