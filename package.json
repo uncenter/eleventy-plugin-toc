@@ -17,7 +17,7 @@
 	"files": [
 		"README.md",
 		"LICENSE",
-        ".eleventy.js",
+		".eleventy.js",
 		"src/index.js"
 	],
 	"main": ".eleventy.js",

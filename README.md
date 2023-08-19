@@ -21,19 +21,19 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 
 Generated TOC:
 
--   [Greetings from Mars](#greetings-from-mars)
-    -   [The red planet](#the-red-planet)
--   [Greetings from Pluto](#greetings-from-pluto)
+- [Greetings from Mars](#greetings-from-mars)
+  - [The red planet](#the-red-planet)
+- [Greetings from Pluto](#greetings-from-pluto)
 
 ```html
 <nav class="toc">
-    <ol>
-        <li><a href="#greetings-from-mars">Greetings from Mars</a></li>
-        <ol>
-            <li><a href="#the-red-planet">The red planet</a></li>
-        </ol>
-        <li><a href="#greetings-from-pluto">Greetings from Pluto</a></li>
-    </ol>
+	<ol>
+		<li><a href="#greetings-from-mars">Greetings from Mars</a></li>
+		<ol>
+			<li><a href="#the-red-planet">The red planet</a></li>
+		</ol>
+		<li><a href="#greetings-from-pluto">Greetings from Pluto</a></li>
+	</ol>
 </nav>
 ```
 
@@ -68,28 +68,28 @@ Your heading tags will need to have `id`s on them, so that the TOC can provide p
 ```js
 // .eleventy.js / eleventy.config.js / eleventy.config.cjs
 
-const markdownIt = require("markdown-it");
-const markdownItAnchor = require("markdown-it-anchor");
+const markdownIt = require('markdown-it');
+const markdownItAnchor = require('markdown-it-anchor');
 
 module.exports = function (eleventyConfig) {
-    eleventyConfig.setLibrary(
-        "md",
-        markdownIt({
-            html: true,
-            linkify: true,
-            typographer: true,
-        }).use(markdownItAnchor, {})
-    );
+	eleventyConfig.setLibrary(
+		'md',
+		markdownIt({
+			html: true,
+			linkify: true,
+			typographer: true,
+		}).use(markdownItAnchor, {}),
+	);
 };
 ```
 
 Then add the TOC plugin:
 
 ```js
-const pluginTOC = require("@uncenter/eleventy-plugin-toc");
+const pluginTOC = require('@uncenter/eleventy-plugin-toc');
 
 module.exports = function (eleventyConfig) {
-    eleventyConfig.addPlugin(pluginTOC);
+	eleventyConfig.addPlugin(pluginTOC);
 };
 ```
 
@@ -144,4 +144,4 @@ One way to add this attribute is via the use of the [markdown-it-attrs](https://
 
 A few things must be in place for this to work properly, and provide the proper nested structure:
 
--   The first matched heading on the page should be the topmost. _Don't put an `<h3>` before an `<h2>`!_
+- The first matched heading on the page should be the topmost. _Don't put an `<h3>` before an `<h2>`!_
