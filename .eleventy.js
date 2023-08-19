@@ -1,8 +1,8 @@
-const Toc = require("./toc");
+const { Toc } = require('./src/index.js');
 
 module.exports = (eleventyConfig, options) => {
-    eleventyConfig.addFilter("toc", (content, opts) => {
-        const toc = new Toc(content, { ...options, ...opts });
-        return toc.html();
-    });
+	eleventyConfig.addFilter('toc', (content, opts) => {
+		const toc = new Toc(content, { ...options, ...opts });
+		return toc.html();
+	});
 };

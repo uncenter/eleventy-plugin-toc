@@ -41,69 +41,51 @@ Generated TOC:
 
 # Table of Contents
 
--   [@uncenter/eleventy-plugin-toc](#uncentereleventy-plugin-toc)
--   [Table of Contents](#table-of-contents)
-    -   [Install](#install)
-    -   [Usage](#usage)
-        -   [Using the provided filter](#using-the-provided-filter)
-        -   [Configuring](#configuring)
-    -   [Gotchyas](#gotchyas)
+- [@uncenter/eleventy-plugin-toc](#uncentereleventy-plugin-toc)
+- [Table of Contents](#table-of-contents)
+  - [Install](#install)
+  - [Usage](#usage)
+    - [Using the provided filter](#using-the-provided-filter)
+    - [Configuring](#configuring)
+  - [Gotchyas](#gotchyas)
 
 ## Install
 
-<table>
-    <tr>
-        <td>Package Manager</td>
-        <td>Command</td>
-    </tr>
-    <tr>
-        <td>npm</td>
-        <td>
-            <pre lang="sh">npm i @uncenter/eleventy-plugin-toc</pre>
-        </td>
-    </tr>
-    <tr>
-        <td>yarn</td>
-        <td>
-            <pre lang="sh">yarn add @uncenter/eleventy-plugin-toc</pre>
-        </td>
-    </tr>
-    <tr>
-        <td>pnpm</td>
-        <td>
-            <pre lang="sh">pnpm add @uncenter/eleventy-plugin-toc</pre>
-        </td>
-    </tr>
-</table>
+```sh
+npm i @uncenter/eleventy-plugin-toc
+pnpm add @uncenter/eleventy-plugin-toc
+yarn add @uncenter/eleventy-plugin-toc
+```
 
 ## Usage
 
-Your heading tags will need to have `id`s on them, so that the TOC can provide proper anchor links to them. Eleventy does not do this for you out of the box. You can use a plugin like [markdown-it-anchor](https://www.npmjs.com/package/markdown-it-anchor) to add those `id`s to the headings automagically (or a similar plugin for your Markdown engine of choice).
+Your heading tags will need to have `id`s on them, so that the TOC can provide proper anchor links to them. Eleventy does not do this for you out of the box. You can use a plugin like [markdown-it-anchor](https://www.npmjs.com/package/markdown-it-anchor) to add those `id`s to the headings automatically (or a similar plugin for your Markdown engine of choice).
 
 > **Note**
 >
 > Make sure not to duplicate the `module.exports` line in your config file for any of the examples below! If you already have a `module.exports` line, just add the lines above and below it to your config file.
 
 ```js
-// .eleventy.js / eleventy.config.(c)js
-const markdownIt = require('markdown-it');
-const markdownItAnchor = require('markdown-it-anchor');
+// .eleventy.js / eleventy.config.js / eleventy.config.cjs
+
+const markdownIt = require("markdown-it");
+const markdownItAnchor = require("markdown-it-anchor");
+
 module.exports = function (eleventyConfig) {
-    eleventyConfig.setLibrary("md",
+    eleventyConfig.setLibrary(
+        "md",
         markdownIt({
             html: true,
             linkify: true,
             typographer: true,
         }).use(markdownItAnchor, {})
-        );
-    };
-}
+    );
+};
 ```
 
-Then add the TOC plugin to your Eleventy config:
+Then add the TOC plugin:
 
 ```js
-// .eleventy.js / eleventy.config.(c)js
 const pluginTOC = require("@uncenter/eleventy-plugin-toc");
 
 module.exports = function (eleventyConfig) {
@@ -127,27 +109,22 @@ module.exports = function (eleventyConfig) {
 You can override some of the [options](#options) at the time that you call it, or all of them when you add it in your Eleventy config.
 All of the options will be merged together, with the options passed to the filter taking precedence over the options passed to the plugin (which take precedence over the defaults).
 
-Override the defaults for your whole site (defaults are shown below):
+Override the defaults for your whole site (defaults are shown):
 
 ```js
-// .eleventy.js / eleventy.config.(c)js
-const pluginTOC = require("@uncenter/eleventy-plugin-toc");
-
-module.exports = function (eleventyConfig) {
-    eleventyConfig.addPlugin(pluginTOC, {
-        tags: ["h2", "h3", "h4"], // the tags (heading levels) to include in the TOC
-        ignoredHeadings: ["[data-toc-exclude]"], // the headings to ignore when generating the TOC (list of selectors)
-        ignoredElements: [], // the elements (within the headings) to ignore when generating the TOC (list of selectors)
-        ul: false, // whether to a use ul or ol
-        wrapper: function (toc) {
-            // the wrapper to use around the generated TOC
-            return `<nav class="toc">${toc}</nav>`;
-        },
-    });
-};
+{
+    tags: ["h2", "h3", "h4"], // tags (heading levels) to include
+    ignoredHeadings: ["[data-toc-exclude]"], // headings to ignore (list of selectors)
+    ignoredElements: [], // elements (within the headings) to ignore when generating the TOC (list of selectors)
+    ul: false, // whether to a use a `ul` or `ol`
+    wrapper: function (toc) {
+        // wrapper around the generated TOC
+        return `<nav class="toc">${toc}</nav>`;
+    },
+}
 ```
 
-And override those just for one template, as it's being invoked
+Or override as it's being invoked:
 
 ```twig
 <aside>
