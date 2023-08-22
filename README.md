@@ -1,8 +1,9 @@
 # @uncenter/eleventy-plugin-toc
 
+> [!NOTE]
 > This repository is an updated fork of [JordanShurmer/eleventy-plugin-nesting-toc](https://github.com/JordanShurmer/eleventy-plugin-nesting-toc) with some additional features and bug fixes.
 
-Easily generate a table of contents (toc) for your Eleventy site, with easy configuration and customization.
+Easily generate a table of contents (TOC) for your Eleventy site, with easy configuration and customization.
 
 HTML:
 
@@ -37,18 +38,6 @@ Generated TOC:
 </nav>
 ```
 
-<hr>
-
-# Table of Contents
-
-- [@uncenter/eleventy-plugin-toc](#uncentereleventy-plugin-toc)
-- [Table of Contents](#table-of-contents)
-  - [Install](#install)
-  - [Usage](#usage)
-    - [Using the provided filter](#using-the-provided-filter)
-    - [Configuring](#configuring)
-  - [Gotchyas](#gotchyas)
-
 ## Install
 
 ```sh
@@ -61,24 +50,19 @@ yarn add @uncenter/eleventy-plugin-toc
 
 Your heading tags will need to have `id`s on them, so that the TOC can provide proper anchor links to them. Eleventy does not do this for you out of the box. You can use a plugin like [markdown-it-anchor](https://www.npmjs.com/package/markdown-it-anchor) to add those `id`s to the headings automatically (or a similar plugin for your Markdown engine of choice).
 
-> **Note**
->
+> [!IMPORTANT]
 > Make sure not to duplicate the `module.exports` line in your config file for any of the examples below! If you already have a `module.exports` line, just add the lines above and below it to your config file.
 
-```js
-// .eleventy.js / eleventy.config.js / eleventy.config.cjs
+In your Eleventy config file (`.eleventy.js`, `eleventy.config.js`, or `eleventy.config.cjs`), add your heading plugin of choice. This example uses the aforementioned `markdown-it-anchor` plugin:
 
+```js
 const markdownIt = require('markdown-it');
 const markdownItAnchor = require('markdown-it-anchor');
 
 module.exports = function (eleventyConfig) {
 	eleventyConfig.setLibrary(
 		'md',
-		markdownIt({
-			html: true,
-			linkify: true,
-			typographer: true,
-		}).use(markdownItAnchor, {}),
+		markdownIt().use(markdownItAnchor),
 	);
 };
 ```
@@ -93,7 +77,10 @@ module.exports = function (eleventyConfig) {
 };
 ```
 
-### Using the provided filter
+To use the TOC in your templates, apply the `toc` filter to your template content:
+
+> [!IMPORTANT]
+> The first matched heading on the page should be the topmost. _Don't put an `<h3>` before an `<h2>`!_
 
 ```twig
 <aside>
@@ -140,8 +127,6 @@ One way to add this attribute is via the use of the [markdown-it-attrs](https://
 ## Heading {data-toc-exclude}
 ```
 
-## Gotchyas
+## License
 
-A few things must be in place for this to work properly, and provide the proper nested structure:
-
-- The first matched heading on the page should be the topmost. _Don't put an `<h3>` before an `<h2>`!_
+[MIT](LICENSE)
