@@ -22,9 +22,9 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 
 Generated TOC:
 
-- [Greetings from Mars](#greetings-from-mars)
-  - [The red planet](#the-red-planet)
-- [Greetings from Pluto](#greetings-from-pluto)
+-   [Greetings from Mars](#greetings-from-mars)
+    -   [The red planet](#the-red-planet)
+-   [Greetings from Pluto](#greetings-from-pluto)
 
 ```html
 <nav class="toc">
@@ -44,6 +44,7 @@ Generated TOC:
 npm i @uncenter/eleventy-plugin-toc
 pnpm add @uncenter/eleventy-plugin-toc
 yarn add @uncenter/eleventy-plugin-toc
+bun add @uncenter/eleventy-plugin-toc
 ```
 
 ## Usage
@@ -60,10 +61,7 @@ const markdownIt = require('markdown-it');
 const markdownItAnchor = require('markdown-it-anchor');
 
 module.exports = function (eleventyConfig) {
-	eleventyConfig.setLibrary(
-		'md',
-		markdownIt().use(markdownItAnchor),
-	);
+	eleventyConfig.setLibrary('md', markdownIt().use(markdownItAnchor));
 };
 ```
 
