@@ -1,4 +1,6 @@
-const { Toc } = require('.');
+import { expect, test } from 'vitest';
+
+import { Toc } from '../src/index.js';
 
 test('ignores headings without anchors', () => {
 	const toc = new Toc(
@@ -35,7 +37,8 @@ test('ignores headings with ignored selectors', () => {
 		{ ignoredHeadings: ['[data-toc-exclude]'] },
 	);
 	const results = toc.get();
-	expect(results.children.length).toBe(1) && expect(results.children[0].text).toBe('Section 2');
+	expect(results.children.length).toBe(1);
+	expect(results.children[0].text).toBe('Section 2');
 });
 
 test('removes ignored elements', () => {
@@ -88,9 +91,8 @@ test('wrapper function is applied', () => {
         <h2 id="bar">Bar</h2>
     `);
 	const html = toc.html();
-	expect(
-		html ===
-			`<nav class="toc"><ol><li><a href="#foo">Foo</a></li><li><a href="#bar">Bar</a></li></ol></nav>`,
+	expect(html.replace(/\n/g, '')).toBe(
+		`<nav class="toc"><ol><li><a href="#foo">Foo</a></li><li><a href="#bar">Bar</a></li></ol></nav>`,
 	);
 });
 
@@ -107,7 +109,9 @@ test('wrapper function is applied with custom wrapper', () => {
 		},
 	);
 	const html = toc.html();
-	expect(html === `<ol><li><a href="#foo">Foo</a></li><li><a href="#bar">Bar</a></li></ol>`);
+	expect(html.replace(/\n/g, '')).toBe(
+		`<ol><li><a href="#foo">Foo</a></li><li><a href="#bar">Bar</a></li></ol>`,
+	);
 });
 
 test('uses ol by default', () => {
@@ -116,7 +120,7 @@ test('uses ol by default', () => {
         <h2 id="bar">Bar</h2>
     `);
 	const html = toc.html();
-	expect(html.includes(`<ol>`));
+	expect(html).toContain('<ol>');
 });
 
 test('use ul instead of ol', () => {
@@ -128,7 +132,7 @@ test('use ul instead of ol', () => {
 		{ ul: true },
 	);
 	const html = toc.html();
-	expect(html.includes(`<ul>`));
+	expect(html).toContain('<ul>');
 });
 
 test('no generated TOC (and no wrapper) when no headings', () => {
@@ -137,7 +141,7 @@ test('no generated TOC (and no wrapper) when no headings', () => {
         <p>Bar</p>
     `);
 	const html = toc.html();
-	expect(html === '');
+	expect(html).toBe('');
 });
 
 test('deep nesting', () => {
