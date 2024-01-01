@@ -12,13 +12,13 @@ const defaults = {
 
 function getParent(prev, current) {
 	if (current.level > prev.level) {
-		// Child of previous
+		// Child of previous.
 		return prev;
 	} else if (current.level === prev.level) {
-		// Sibling of previous
+		// Sibling of previous.
 		return prev.parent;
 	} else {
-		// Above the previous
+		// Above the previous.
 		return getParent(prev.parent, current);
 	}
 }
@@ -64,12 +64,12 @@ class Toc {
 
 		const $ = cheerio.load(htmlstring);
 
-		let headings = $(selector).filter('[id]'); // Make sure heading has an ID (for linking)
+		let headings = $(selector).filter('[id]'); // Make sure heading has an ID (for linking).
 		this.options.ignoredHeadings.forEach((selector) => {
-			headings = headings.filter(`:not(${selector})`); // Remove ignored elements
+			headings = headings.filter(`:not(${selector})`); // Remove ignored elements.
 		});
 
-		headings.find(this.options.ignoredElements.join(',')).remove(); // Remove ignored elements from heading text content
+		headings.find(this.options.ignoredElements.join(',')).remove(); // Remove ignored elements from heading text content.
 
 		if (headings.length) {
 			let previous = this.root;
@@ -93,11 +93,9 @@ class Toc {
 	html() {
 		const { wrapper } = this.options;
 		const root = this.get();
-		if (root.children.length) {
-			// Only return markup if there are headings
-			return wrapper(root.html());
-		}
-		return '';
+
+		// Only return markup if there are headings.
+		return root.children.length ? wrapper(root.html()) : '';
 	}
 }
 
