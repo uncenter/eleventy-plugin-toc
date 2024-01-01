@@ -2,7 +2,7 @@
 	"name": "@uncenter/eleventy-plugin-toc",
 	"version": "1.0.3",
 	"description": "Eleventy plugin for generating a table of contents from headings in your content, with many options for customisation.",
-	"author": "uncenter (https://uncenter.dev)",
+	"author": "uncenter <hi@uncenter.dev>",
 	"repository": "uncenter/eleventy-plugin-toc",
 	"keywords": [
 		"11ty",
