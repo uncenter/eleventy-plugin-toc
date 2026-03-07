@@ -22,6 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
+          node-version: "latest"
           registry-url: "https://registry.npmjs.org"
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
@@ -33,9 +34,6 @@ jobs:
         run: pnpm test
 
       - name: Publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
         run: |
           pnpm publish --no-git-checks --access public
 
