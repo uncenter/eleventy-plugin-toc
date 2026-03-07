@@ -69,11 +69,20 @@ export class Toc {
 
 		const { document } = parseHTML(htmlstring);
 
-		let headings = Array.from(document.querySelectorAll(selector)).filter((el) => el.id && !(this.options.ignoredHeadings.some((ignoredHeadingSelector) => el.matches(ignoredHeadingSelector)))); // Make sure heading has an ID (for linking).
+		let headings = Array.from(document.querySelectorAll(selector)).filter(
+			(el) =>
+				el.id && // Make sure heading has an ID (for linking).
+				!this.options.ignoredHeadings.some(
+					(ignoredHeadingSelector) =>
+						el.matches(ignoredHeadingSelector), // Filter out the heading if it matches any configured ignore selectors.
+				),
+		);
 
 		for (let heading of headings) {
-			for (let ignoredElementMatch of heading.querySelectorAll(this.options.ignoredElements.join(','))) {
-				ignoredElementMatch.remove()
+			for (let ignoredElementMatch of heading.querySelectorAll(
+				this.options.ignoredElements.join(','),
+			)) {
+				ignoredElementMatch.remove();
 			} // Remove ignored elements from heading text content.
 		}
 
@@ -85,7 +94,7 @@ export class Toc {
 				current.parent = parent;
 				parent.children.push(current);
 				previous = current;
-			};
+			}
 		}
 	}
 

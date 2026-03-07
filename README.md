@@ -25,9 +25,9 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 
 Generated TOC:
 
--   [Greetings from Mars](#greetings-from-mars)
-    -   [The red planet](#the-red-planet)
--   [Greetings from Pluto](#greetings-from-pluto)
+- [Greetings from Mars](#greetings-from-mars)
+    - [The red planet](#the-red-planet)
+- [Greetings from Pluto](#greetings-from-pluto)
 
 ```html
 <nav class="toc">
