@@ -49,7 +49,7 @@ bun add @uncenter/eleventy-plugin-toc
 
 ## Usage
 
-Your heading tags will need to have `id`s on them, so that the TOC can provide proper anchor links to them. Eleventy does not do this for you out of the box. You can use a plugin like [markdown-it-anchor](https://www.npmjs.com/package/markdown-it-anchor) to add those `id`s to the headings automatically (or a similar plugin for your Markdown engine of choice).
+Your heading elements will need to have `id` attributes on them, so that the table of contents can provide anchor links to them. Eleventy does not do this for you out of the box. You can use a plugin like [markdown-it-anchor](https://www.npmjs.com/package/markdown-it-anchor) to add `id` attributes to the headings automatically (or a similar plugin for your Markdown engine of choice).
 
 > [!IMPORTANT]
 > Make sure not to duplicate the `module.exports` line in your config file for any of the examples below! If you already have a `module.exports` line, just add the lines above and below it to your config file.
@@ -57,25 +57,25 @@ Your heading tags will need to have `id`s on them, so that the TOC can provide p
 In your Eleventy config file (`.eleventy.js`, `eleventy.config.js`, or `eleventy.config.cjs`), add your heading plugin of choice. This example uses the aforementioned `markdown-it-anchor` plugin:
 
 ```js
-const markdownIt = require('markdown-it');
-const markdownItAnchor = require('markdown-it-anchor');
+import markdownIt from 'markdown-it';
+import markdownItAnchor from 'markdown-it-anchor';
 
-module.exports = function (eleventyConfig) {
+export default function (eleventyConfig) {
 	eleventyConfig.setLibrary('md', markdownIt().use(markdownItAnchor));
-};
+}
 ```
 
-Then add the TOC plugin:
+Then add the table of contents plugin:
 
 ```js
-const pluginTOC = require('@uncenter/eleventy-plugin-toc');
+import pluginTOC from '@uncenter/eleventy-plugin-toc';
 
-module.exports = function (eleventyConfig) {
+export default function (eleventyConfig) {
 	eleventyConfig.addPlugin(pluginTOC);
-};
+}
 ```
 
-To use the TOC in your templates, apply the `toc` filter to your template content:
+To use the table of contents in your templates, apply the `toc` filter to your template content:
 
 > [!IMPORTANT]
 > The first matched heading on the page should be the topmost. _Don't put an `<h3>` before an `<h2>`!_
