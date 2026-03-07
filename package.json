@@ -17,7 +17,8 @@
 		".eleventy.js",
 		"src/index.js"
 	],
-	"main": ".eleventy.js",
+	"type": "module",
+	"exports": "./.eleventy.js",
 	"scripts": {
 		"test": "vitest",
 		"format": "prettier --write ."

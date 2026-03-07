@@ -1,4 +1,4 @@
-const cheerio = require('cheerio');
+import cheerio from 'cheerio';
 
 const defaults = {
 	tags: ['h2', 'h3', 'h4'],
@@ -55,7 +55,7 @@ class Item {
 	}
 }
 
-class Toc {
+export class Toc {
 	constructor(htmlstring = '', options = defaults) {
 		this.options = { ...defaults, ...options };
 		const selector = this.options.tags.join(',');
@@ -98,5 +98,3 @@ class Toc {
 		return root.children.length ? wrapper(root.html()) : '';
 	}
 }
-
-module.exports = { Toc };

@@ -177,13 +177,13 @@ test('the README example works', () => {
 	const toc = new Toc(`
     <h1>Hello, World</h1>
     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-    
+
     <h2 id="greetings-from-mars">Greetings from Mars</h2>
     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-    
+
     <h3 id="the-red-planet">The red planet</h3>
     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-    
+
     <h2 id="greetings-from-pluto">Greetings from Pluto</h2>
     `);
 	const results = toc.get();
