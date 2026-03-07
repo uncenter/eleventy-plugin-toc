@@ -52,7 +52,7 @@ bun add @uncenter/eleventy-plugin-toc
 Your heading elements will need to have `id` attributes on them, so that the table of contents can provide anchor links to them. Eleventy does not do this for you out of the box. You can use a plugin like [markdown-it-anchor](https://www.npmjs.com/package/markdown-it-anchor) to add `id` attributes to the headings automatically (or a similar plugin for your Markdown engine of choice).
 
 > [!IMPORTANT]
-> Make sure not to duplicate the `module.exports` line in your config file for any of the examples below! If you already have a `module.exports` line, just add the lines above and below it to your config file.
+> Make sure not to duplicate the `export default function (eleventyConfig) {` line in your config file for any of the examples below! If you already have a `export default function (eleventyConfig) {` line, just add the lines above and below it to your config file.
 
 In your Eleventy config file (`.eleventy.js`, `eleventy.config.js`, or `eleventy.config.cjs`), add your heading plugin of choice. This example uses the aforementioned `markdown-it-anchor` plugin:
 
