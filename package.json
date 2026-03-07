@@ -24,7 +24,7 @@
 		"format": "prettier --write ."
 	},
 	"dependencies": {
-		"cheerio": "1.0.0-rc.12"
+		"linkedom": "^0.18.12"
 	},
 	"devDependencies": {
 		"prettier": "^3.8.1",

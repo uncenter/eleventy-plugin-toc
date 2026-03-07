@@ -1,4 +1,4 @@
-import cheerio from 'cheerio';
+import { parseHTML } from 'linkedom';
 
 const defaults = {
 	tags: ['h2', 'h3', 'h4'],
@@ -24,12 +24,17 @@ function getParent(prev, current) {
 }
 
 class Item {
-	constructor({ $el = null, options }) {
+	/**
+	 *
+	 * @param {HTMLElement} el
+	 * @param {*} options
+	 */
+	constructor(el, options) {
 		this.options = options;
-		if ($el) {
-			this.slug = $el.attr('id');
-			this.text = $el.text().trim();
-			this.level = +$el.get(0).tagName.slice(1);
+		if (el) {
+			this.slug = el.id;
+			this.text = el.textContent.trim();
+			this.level = el.tagName.slice(1);
 		} else {
 			this.level = 0;
 		}
@@ -59,30 +64,28 @@ export class Toc {
 	constructor(htmlstring = '', options = defaults) {
 		this.options = { ...defaults, ...options };
 		const selector = this.options.tags.join(',');
-		this.root = new Item({ options: this.options });
+		this.root = new Item(undefined, this.options);
 		this.root.parent = this.root;
 
-		const $ = cheerio.load(htmlstring);
+		const { document } = parseHTML(htmlstring);
 
-		let headings = $(selector).filter('[id]'); // Make sure heading has an ID (for linking).
-		this.options.ignoredHeadings.forEach((selector) => {
-			headings = headings.filter(`:not(${selector})`); // Remove ignored elements.
-		});
+		let headings = Array.from(document.querySelectorAll(selector)).filter((el) => el.id && !(this.options.ignoredHeadings.some((ignoredHeadingSelector) => el.matches(ignoredHeadingSelector)))); // Make sure heading has an ID (for linking).
 
-		headings.find(this.options.ignoredElements.join(',')).remove(); // Remove ignored elements from heading text content.
+		for (let heading of headings) {
+			for (let ignoredElementMatch of heading.querySelectorAll(this.options.ignoredElements.join(','))) {
+				ignoredElementMatch.remove()
+			} // Remove ignored elements from heading text content.
+		}
 
 		if (headings.length) {
 			let previous = this.root;
-			headings.each((index, heading) => {
-				const current = new Item({
-					$el: $(heading),
-					options: this.options,
-				});
+			for (let heading of headings) {
+				const current = new Item(heading, this.options);
 				const parent = getParent(previous, current);
 				current.parent = parent;
 				parent.children.push(current);
 				previous = current;
-			});
+			};
 		}
 	}
 
