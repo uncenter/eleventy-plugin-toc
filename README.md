@@ -3,6 +3,9 @@
 > [!NOTE]
 > This repository is an updated fork of [JordanShurmer/eleventy-plugin-nesting-toc](https://github.com/JordanShurmer/eleventy-plugin-nesting-toc) with some additional features and bug fixes.
 
+> [!IMPORTANT]
+> This plugin is now ESM-only. It can be used in CJS though (i.e. imported via `require`) starting with Node.js version 20 and newer.
+
 Easily generate a table of contents (TOC) for your Eleventy site, with easy configuration and customization.
 
 HTML:
