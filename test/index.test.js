@@ -19,8 +19,8 @@ test('ignores headings not in tags', () => {
 	const toc = new Toc(
 		/* html */ `
         <h1 id="section1">Section 1</h1>
-        <h2 id="section2">Section 2</h2>
-        <h3 id="section3">Section 3</h3>
+            <h2 id="section2">Section 2</h2>
+                <h3 id="section3">Section 3</h3>
     `,
 		{ tags: ['h1'] },
 	);
@@ -44,9 +44,9 @@ test('ignores headings with ignored selectors', () => {
 test('handle markup within heading content', () => {
 	const toc = new Toc(/* html */ `
         <h2 id="foo"><strong>Foo</strong></h2>
-        <h3 id="bar">Bar</h3>
+            <h3 id="bar">Bar</h3>
         <h2 id="baz"><a href="#other">Baz</a></h2>
-        <h3 id="quz">Qu<a href="#other">z</a></h3>
+            <h3 id="quz">Qu<a href="#other">z</a></h3>
     `);
 	const results = toc.get();
 	expect(results.children[0].content).toBe('Foo');
@@ -86,8 +86,8 @@ test('heading nesting', () => {
 	const toc = new Toc(
 		/* html */ `
         <h1 id="foo">Foo</h1>
-        <h2 id="bar">Bar</h2>
-        <h3 id="baz">Baz</h3>
+            <h2 id="bar">Bar</h2>
+                <h3 id="baz">Baz</h3>
     `,
 		{ tags: ['h2', 'h3'] },
 	);
