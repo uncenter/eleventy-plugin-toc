@@ -44,8 +44,8 @@ function getParent(prev, current) {
 class Item {
 	/**
 	 *
-	 * @param {Element | undefined} el
-	 * @param {Item | undefined} previous
+	 * @param {Element | undefined} el Heading element.
+	 * @param {Item | undefined} previous Previous heading item.
 	 * @param {Options} options
 	 */
 	constructor(el, previous, options) {
