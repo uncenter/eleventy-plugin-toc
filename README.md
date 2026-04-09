@@ -26,7 +26,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 Generated TOC:
 
 - [Greetings from Mars](#greetings-from-mars)
-    - [The red planet](#the-red-planet)
+  - [The red planet](#the-red-planet)
 - [Greetings from Pluto](#greetings-from-pluto)
 
 ```html
@@ -120,7 +120,7 @@ Or override as it's being invoked:
 </aside>
 ```
 
-If you have specific headings which you don't want to be included in the TOC, you can add one of the `ignoredElements` selectors to exclude these headings (defaults to the`[data-toc-exclude]` selector).
+If you have specific headings which you don't want to be included in the TOC, you can add one of the `ignoredHeadings` selectors to exclude these headings (defaults to the`[data-toc-exclude]` selector).
 
 One way to add this attribute is via the use of the [markdown-it-attrs](https://www.npmjs.com/package/markdown-it-attrs) plugin:
 
