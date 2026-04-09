@@ -41,17 +41,18 @@ test('ignores headings with ignored selectors', () => {
 	expect(results.children[0].content).toBe('Section 2');
 });
 
-test('preserve markup within heading content', () => {
+test('handle markup within heading content', () => {
 	const toc = new Toc(/* html */ `
         <h2 id="foo"><strong>Foo</strong></h2>
         <h3 id="bar">Bar</h3>
         <h2 id="baz"><a href="#other">Baz</a></h2>
         <h3 id="quz">Qu<a href="#other">z</a></h3>
     `);
-	const html = toc.html();
-	expect(html.replace(/\n/g, '')).toBe(
-		/* html */ `<nav class="toc"><ol><li><a href="#foo"><strong>Foo</strong></a><ol><li><a href="#bar">Bar</a></li></ol></li><li><a href="#baz"><a href="#other">Baz</a></a><ol><li><a href="#quz">Qu<a href="#other">z</a></a></li></ol></li></ol></nav>`,
-	);
+	const results = toc.get();
+	expect(results.children[0].content).toBe('Foo');
+	expect(results.children[0].children[0].content).toBe('Bar');
+	expect(results.children[1].content).toBe('Baz');
+	expect(results.children[1].children[0].content).toBe('Quz');
 });
 
 test('ignored elements are removed from inner content markup', () => {

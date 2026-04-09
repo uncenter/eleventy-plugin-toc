@@ -51,7 +51,7 @@ class Item {
 	constructor(el, previous, options) {
 		this.options = options;
 		if (el) {
-			this.content = el.innerHTML.trim();
+			this.content = el.textContent.trim();
 			/**
 			 * @type {Record<string, string>}
 			 */
