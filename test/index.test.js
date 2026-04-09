@@ -38,19 +38,33 @@ test('ignores headings with ignored selectors', () => {
 	);
 	const results = toc.get();
 	expect(results.children.length).toBe(1);
-	expect(results.children[0].text).toBe('Section 2');
+	expect(results.children[0].content).toBe('Section 2');
 });
 
-test('removes ignored elements', () => {
+test('preserve markup within heading content', () => {
+	const toc = new Toc(`
+        <h2 id="foo"><strong>Foo</strong></h2>
+        <h3 id="bar">Bar</h3>
+        <h2 id="baz"><a href="#other">Baz</a></h2>
+        <h3 id="quz">Qu<a href="#other">z</a></h3>
+    `);
+	const html = toc.html();
+	expect(html.replace(/\n/g, '')).toBe(
+		`<nav class="toc"><ol><li><a href="#foo"><strong>Foo</strong></a><ol><li><a href="#bar">Bar</a></li></ol></li><li><a href="#baz"><a href="#other">Baz</a></a><ol><li><a href="#quz">Qu<a href="#other">z</a></a></li></ol></li></ol></nav>`,
+	);
+});
+
+test('ignored elements are removed from inner content markup', () => {
 	const toc = new Toc(
 		`
-        <h2 id="section1">Section 1</h2>
+        <h2 id="section1"><strong>Section</strong> 1</h2>
         <h2 id="section2">Section 2 <a class="permalink">#</a></h2>
     `,
-		{ ignoredElements: ['.permalink'] },
+		{ ignoredElements: ['.permalink', 'strong'] },
 	);
 	const results = toc.get();
-	expect(results.children[1].text).toBe('Section 2');
+	expect(results.children[0].content).toBe('1');
+	expect(results.children[1].content).toBe('Section 2');
 });
 
 test('removes headings with multiple ignored selectors', () => {
@@ -64,7 +78,7 @@ test('removes headings with multiple ignored selectors', () => {
 	);
 	const results = toc.get();
 	expect(results.children.length).toBe(1);
-	expect(results.children[0].text).toBe('Section 3');
+	expect(results.children[0].content).toBe('Section 3');
 });
 
 test('heading nesting', () => {
@@ -79,10 +93,10 @@ test('heading nesting', () => {
 	const results = toc.get();
 	expect(results.children.length).toBe(1);
 	expect(results.children[0].slug).toBe('bar');
-	expect(results.children[0].text).toBe('Bar');
+	expect(results.children[0].content).toBe('Bar');
 	expect(results.children[0].children.length).toBe(1);
 	expect(results.children[0].children[0].slug).toBe('baz');
-	expect(results.children[0].children[0].text).toBe('Baz');
+	expect(results.children[0].children[0].content).toBe('Baz');
 });
 
 test('wrapper function is applied', () => {
@@ -158,19 +172,19 @@ test('deep nesting', () => {
 	const results = toc.get();
 	expect(results.children.length).toBe(2);
 	expect(results.children[0].slug).toBe('bar');
-	expect(results.children[0].text).toBe('Bar');
+	expect(results.children[0].content).toBe('Bar');
 	expect(results.children[0].children.length).toBe(2);
 	expect(results.children[0].children[0].slug).toBe('foobar');
-	expect(results.children[0].children[0].text).toBe('FooBar');
+	expect(results.children[0].children[0].content).toBe('FooBar');
 	expect(results.children[0].children[0].children.length).toBe(1);
 	expect(results.children[0].children[0].children[0].slug).toBe('deeeep');
 	expect(results.children[0].children[1].slug).toBe('foobar-again');
-	expect(results.children[0].children[1].text).toBe('FooBar Again');
+	expect(results.children[0].children[1].content).toBe('FooBar Again');
 	expect(results.children[1].slug).toBe('baz');
-	expect(results.children[1].text).toBe('Baz');
+	expect(results.children[1].content).toBe('Baz');
 	expect(results.children[1].children.length).toBe(1);
 	expect(results.children[1].children[0].slug).toBe('bazbar');
-	expect(results.children[1].children[0].text).toBe('BazBar');
+	expect(results.children[1].children[0].content).toBe('BazBar');
 });
 
 test('the README example works', () => {
@@ -189,10 +203,10 @@ test('the README example works', () => {
 	const results = toc.get();
 	expect(results.children.length).toBe(2);
 	expect(results.children[0].slug).toBe('greetings-from-mars');
-	expect(results.children[0].text).toBe('Greetings from Mars');
+	expect(results.children[0].content).toBe('Greetings from Mars');
 	expect(results.children[0].children.length).toBe(1);
 	expect(results.children[0].children[0].slug).toBe('the-red-planet');
-	expect(results.children[0].children[0].text).toBe('The red planet');
+	expect(results.children[0].children[0].content).toBe('The red planet');
 	expect(results.children[1].slug).toBe('greetings-from-pluto');
-	expect(results.children[1].text).toBe('Greetings from Pluto');
+	expect(results.children[1].content).toBe('Greetings from Pluto');
 });

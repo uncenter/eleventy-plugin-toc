@@ -33,7 +33,7 @@ class Item {
 		this.options = options;
 		if (el) {
 			this.slug = el.id;
-			this.text = el.textContent.trim();
+			this.content = el.innerHTML.trim();
 			this.level = el.tagName.slice(1);
 		} else {
 			this.level = 0;
@@ -43,8 +43,8 @@ class Item {
 
 	html() {
 		let markup = '';
-		if (this.slug && this.text) {
-			markup += `<li><a href="#${this.slug}">${this.text}</a>`;
+		if (this.slug && this.content) {
+			markup += `<li><a href="#${this.slug}">${this.content}</a>`;
 		}
 		if (this.children.length > 0) {
 			markup += `${this.options.ul ? '<ul>' : '<ol>'}${this.children
@@ -52,7 +52,7 @@ class Item {
 				.join('\n')}${this.options.ul ? '</ul>' : '</ol>'}`;
 		}
 
-		if (this.slug && this.text) {
+		if (this.slug && this.content) {
 			markup += '</li>';
 		}
 
