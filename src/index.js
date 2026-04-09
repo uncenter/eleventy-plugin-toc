@@ -1,5 +1,17 @@
+// @ts-check
+
 import { parseHTML } from 'linkedom';
 
+/**
+ * @typedef {Object} Options
+ * @property {Array<string>} tags - Heading tags (levels) to include.
+ * @property {Array<string>} ignoredHeadings - List of selectors to ignore for matched headings.
+ * @property {Array<string>} ignoredElements - List of selectors for elements to ignore inside headings.
+ * @property {boolean} ul - Use an unordered list instead of an ordered list.
+ * @property {(toc: string) => string} wrapper - Wrapper function around the generated table of contents.
+ */
+
+/** @type {Options} */
 const defaults = {
 	tags: ['h2', 'h3', 'h4'],
 	ignoredHeadings: ['[data-toc-exclude]'],
@@ -10,6 +22,12 @@ const defaults = {
 	},
 };
 
+/**
+ *
+ * @param {Item} prev
+ * @param {Item} current
+ * @returns {Item}
+ */
 function getParent(prev, current) {
 	if (current.level > prev.level) {
 		// Child of previous.
@@ -26,10 +44,11 @@ function getParent(prev, current) {
 class Item {
 	/**
 	 *
-	 * @param {HTMLElement} el
-	 * @param {*} options
+	 * @param {Element | undefined} el
+	 * @param {Item | undefined} previous
+	 * @param {Options} options
 	 */
-	constructor(el, options) {
+	constructor(el, previous, options) {
 		this.options = options;
 		if (el) {
 			this.slug = el.id;
@@ -38,6 +57,15 @@ class Item {
 		} else {
 			this.level = 0;
 		}
+		/**
+		 * @type {Item}
+		 * @public
+		 */
+		this.parent = previous ? getParent(previous, this) : this;
+		/**
+		 * @type {Array<Item>}
+		 * @public
+		 */
 		this.children = [];
 	}
 
@@ -64,8 +92,7 @@ export class Toc {
 	constructor(htmlstring = '', options = defaults) {
 		this.options = { ...defaults, ...options };
 		const selector = this.options.tags.join(',');
-		this.root = new Item(undefined, this.options);
-		this.root.parent = this.root;
+		this.root = new Item(undefined, undefined, this.options);
 
 		const { document } = parseHTML(htmlstring);
 
@@ -89,10 +116,8 @@ export class Toc {
 		if (headings.length) {
 			let previous = this.root;
 			for (let heading of headings) {
-				const current = new Item(heading, this.options);
-				const parent = getParent(previous, current);
-				current.parent = parent;
-				parent.children.push(current);
+				const current = new Item(heading, previous, this.options);
+				current.parent.children.push(current);
 				previous = current;
 			}
 		}
