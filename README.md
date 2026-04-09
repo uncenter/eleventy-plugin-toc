@@ -105,6 +105,7 @@ Override the defaults for your whole site (defaults are shown):
     ignoredHeadings: ["[data-toc-exclude]"], // headings to ignore (list of selectors)
     ignoredElements: [], // elements (within the headings) to ignore when generating the TOC (list of selectors)
     ul: false, // whether to a use a `ul` or `ol`
+    inheritAttributes: false, // whether to inherit heading attributes to TOC links
     wrapper: function (toc) {
         // wrapper around the generated TOC
         return `<nav class="toc">${toc}</nav>`;
