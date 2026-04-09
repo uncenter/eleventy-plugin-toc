@@ -4,7 +4,7 @@ import { Toc } from '../src/index.js';
 
 test('ignores headings without anchors', () => {
 	const toc = new Toc(
-		`
+		/* html */ `
         <h2 id="section1">Section 1</h2>
         <h2>Section 2</h2>
         <h2 id="section3">Section 3</h2>
@@ -17,7 +17,7 @@ test('ignores headings without anchors', () => {
 
 test('ignores headings not in tags', () => {
 	const toc = new Toc(
-		`
+		/* html */ `
         <h1 id="section1">Section 1</h1>
         <h2 id="section2">Section 2</h2>
         <h3 id="section3">Section 3</h3>
@@ -30,7 +30,7 @@ test('ignores headings not in tags', () => {
 
 test('ignores headings with ignored selectors', () => {
 	const toc = new Toc(
-		`
+		/* html */ `
         <h2 id="section1" data-toc-exclude>Section 1</h2>
         <h2 id="section2">Section 2</h2>
     `,
@@ -42,7 +42,7 @@ test('ignores headings with ignored selectors', () => {
 });
 
 test('preserve markup within heading content', () => {
-	const toc = new Toc(`
+	const toc = new Toc(/* html */ `
         <h2 id="foo"><strong>Foo</strong></h2>
         <h3 id="bar">Bar</h3>
         <h2 id="baz"><a href="#other">Baz</a></h2>
@@ -50,13 +50,13 @@ test('preserve markup within heading content', () => {
     `);
 	const html = toc.html();
 	expect(html.replace(/\n/g, '')).toBe(
-		`<nav class="toc"><ol><li><a href="#foo"><strong>Foo</strong></a><ol><li><a href="#bar">Bar</a></li></ol></li><li><a href="#baz"><a href="#other">Baz</a></a><ol><li><a href="#quz">Qu<a href="#other">z</a></a></li></ol></li></ol></nav>`,
+		/* html */ `<nav class="toc"><ol><li><a href="#foo"><strong>Foo</strong></a><ol><li><a href="#bar">Bar</a></li></ol></li><li><a href="#baz"><a href="#other">Baz</a></a><ol><li><a href="#quz">Qu<a href="#other">z</a></a></li></ol></li></ol></nav>`,
 	);
 });
 
 test('ignored elements are removed from inner content markup', () => {
 	const toc = new Toc(
-		`
+		/* html */ `
         <h2 id="section1"><strong>Section</strong> 1</h2>
         <h2 id="section2">Section 2 <a class="permalink">#</a></h2>
     `,
@@ -69,7 +69,7 @@ test('ignored elements are removed from inner content markup', () => {
 
 test('removes headings with multiple ignored selectors', () => {
 	const toc = new Toc(
-		`
+		/* html */ `
         <h2 id="section1" data-toc-exclude>Section 1</h2>
         <h2 id="section2" class="toc-ignore">Section 2</h2>
         <h2 id="section3">Section 3</h2>
@@ -83,7 +83,7 @@ test('removes headings with multiple ignored selectors', () => {
 
 test('heading nesting', () => {
 	const toc = new Toc(
-		`
+		/* html */ `
         <h1 id="foo">Foo</h1>
         <h2 id="bar">Bar</h2>
         <h3 id="baz">Baz</h3>
@@ -100,19 +100,19 @@ test('heading nesting', () => {
 });
 
 test('wrapper function is applied', () => {
-	const toc = new Toc(`
+	const toc = new Toc(/* html */ `
         <h2 id="foo">Foo</h2>
         <h2 id="bar">Bar</h2>
     `);
 	const html = toc.html();
 	expect(html.replace(/\n/g, '')).toBe(
-		`<nav class="toc"><ol><li><a href="#foo">Foo</a></li><li><a href="#bar">Bar</a></li></ol></nav>`,
+		/* html */ `<nav class="toc"><ol><li><a href="#foo">Foo</a></li><li><a href="#bar">Bar</a></li></ol></nav>`,
 	);
 });
 
 test('wrapper function is applied with custom wrapper', () => {
 	const toc = new Toc(
-		`
+		/* html */ `
         <h2 id="foo">Foo</h2>
         <h2 id="bar">Bar</h2>
     `,
@@ -124,12 +124,12 @@ test('wrapper function is applied with custom wrapper', () => {
 	);
 	const html = toc.html();
 	expect(html.replace(/\n/g, '')).toBe(
-		`<ol><li><a href="#foo">Foo</a></li><li><a href="#bar">Bar</a></li></ol>`,
+		/* html */ `<ol><li><a href="#foo">Foo</a></li><li><a href="#bar">Bar</a></li></ol>`,
 	);
 });
 
 test('uses ol by default', () => {
-	const toc = new Toc(`
+	const toc = new Toc(/* html */ `
         <h2 id="foo">Foo</h2>
         <h2 id="bar">Bar</h2>
     `);
@@ -139,7 +139,7 @@ test('uses ol by default', () => {
 
 test('use ul instead of ol', () => {
 	const toc = new Toc(
-		`
+		/* html */ `
         <h2 id="foo">Foo</h2>
         <h2 id="bar">Bar</h2>
     `,
@@ -150,7 +150,7 @@ test('use ul instead of ol', () => {
 });
 
 test('no generated TOC (and no wrapper) when no headings', () => {
-	const toc = new Toc(`
+	const toc = new Toc(/* html */ `
         <p>Foo</p>
         <p>Bar</p>
     `);
@@ -159,7 +159,7 @@ test('no generated TOC (and no wrapper) when no headings', () => {
 });
 
 test('deep nesting', () => {
-	const toc = new Toc(`
+	const toc = new Toc(/* html */ `
             <h1>Foo</h1>
                 <h2 id="bar">Bar</h2>
                     <h3 id="foobar">FooBar</h3>
@@ -188,7 +188,7 @@ test('deep nesting', () => {
 });
 
 test('the README example works', () => {
-	const toc = new Toc(`
+	const toc = new Toc(/* html */ `
     <h1>Hello, World</h1>
     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 
