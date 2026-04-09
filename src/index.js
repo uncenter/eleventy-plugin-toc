@@ -51,8 +51,17 @@ class Item {
 	constructor(el, previous, options) {
 		this.options = options;
 		if (el) {
-			this.slug = el.id;
 			this.content = el.innerHTML.trim();
+			/**
+			 * @type {Record<string, string>}
+			 */
+			this.attributes = { href: `#${el.id}` }; // note: by defining href here, we do allow (intentionally) a user-set attribute href to override the link href.
+			if (el.hasAttributes()) {
+				for (let attribute of el.attributes) {
+					if (['id'].includes(attribute.name)) continue; // skip id attribute
+					this.attributes[attribute.name] = attribute.value;
+				}
+			}
 			this.level = el.tagName.slice(1);
 		} else {
 			this.level = 0;
@@ -71,8 +80,11 @@ class Item {
 
 	html() {
 		let markup = '';
-		if (this.slug && this.content) {
-			markup += `<li><a href="#${this.slug}">${this.content}</a>`;
+		if (this.content) {
+			let attributes = Object.entries(this.attributes)
+				.map(([name, value]) => ` ${name}="${value}"`)
+				.join('');
+			markup += `<li><a${attributes}>${this.content}</a>`;
 		}
 		if (this.children.length > 0) {
 			markup += `${this.options.ul ? '<ul>' : '<ol>'}${this.children
@@ -80,7 +92,7 @@ class Item {
 				.join('\n')}${this.options.ul ? '</ul>' : '</ol>'}`;
 		}
 
-		if (this.slug && this.content) {
+		if (this.content) {
 			markup += '</li>';
 		}
 

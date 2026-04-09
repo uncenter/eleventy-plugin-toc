@@ -92,10 +92,8 @@ test('heading nesting', () => {
 	);
 	const results = toc.get();
 	expect(results.children.length).toBe(1);
-	expect(results.children[0].slug).toBe('bar');
 	expect(results.children[0].content).toBe('Bar');
 	expect(results.children[0].children.length).toBe(1);
-	expect(results.children[0].children[0].slug).toBe('baz');
 	expect(results.children[0].children[0].content).toBe('Baz');
 });
 
@@ -171,19 +169,13 @@ test('deep nesting', () => {
         `);
 	const results = toc.get();
 	expect(results.children.length).toBe(2);
-	expect(results.children[0].slug).toBe('bar');
 	expect(results.children[0].content).toBe('Bar');
 	expect(results.children[0].children.length).toBe(2);
-	expect(results.children[0].children[0].slug).toBe('foobar');
 	expect(results.children[0].children[0].content).toBe('FooBar');
 	expect(results.children[0].children[0].children.length).toBe(1);
-	expect(results.children[0].children[0].children[0].slug).toBe('deeeep');
-	expect(results.children[0].children[1].slug).toBe('foobar-again');
 	expect(results.children[0].children[1].content).toBe('FooBar Again');
-	expect(results.children[1].slug).toBe('baz');
 	expect(results.children[1].content).toBe('Baz');
 	expect(results.children[1].children.length).toBe(1);
-	expect(results.children[1].children[0].slug).toBe('bazbar');
 	expect(results.children[1].children[0].content).toBe('BazBar');
 });
 
@@ -202,11 +194,19 @@ test('the README example works', () => {
     `);
 	const results = toc.get();
 	expect(results.children.length).toBe(2);
-	expect(results.children[0].slug).toBe('greetings-from-mars');
 	expect(results.children[0].content).toBe('Greetings from Mars');
 	expect(results.children[0].children.length).toBe(1);
-	expect(results.children[0].children[0].slug).toBe('the-red-planet');
 	expect(results.children[0].children[0].content).toBe('The red planet');
-	expect(results.children[1].slug).toBe('greetings-from-pluto');
 	expect(results.children[1].content).toBe('Greetings from Pluto');
+});
+
+test('attributes on headings are preserved', () => {
+	const toc = new Toc(/* html */ `
+        <h2 data-highlight="true" id="foo">Foo</h2>
+        <h2 style="color: red;" id="bar">Bar</h2>
+    `);
+	const html = toc.html();
+	expect(html.replace(/\n/g, '')).toBe(
+		/* html */ `<nav class="toc"><ol><li><a href="#foo" data-highlight="true">Foo</a></li><li><a href="#bar" style="color: red;">Bar</a></li></ol></nav>`,
+	);
 });
