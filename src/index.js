@@ -58,10 +58,9 @@ class Item {
 			 * @type {Record<string, string>}
 			 */
 			this.attributes = { href: `#${el.id}` }; // note: by defining href here, we do allow (intentionally) a user-set attribute href to override the link href.
-			if (el.hasAttributes()) {
+			if (this.options.inheritAttributes && el.hasAttributes()) {
 				for (let attribute of el.attributes) {
 					if (['id'].includes(attribute.name)) continue; // skip id attribute
-					if (this.options.inheritAttributes === false) continue;
 					if (
 						Array.isArray(this.options.inheritAttributes) &&
 						!this.options.inheritAttributes.includes(attribute.name)
