@@ -8,6 +8,7 @@ import { parseHTML } from 'linkedom';
  * @property {Array<string>} ignoredHeadings - List of selectors to ignore for matched headings.
  * @property {Array<string>} ignoredElements - List of selectors for elements to ignore inside headings.
  * @property {boolean} ul - Use an unordered list instead of an ordered list.
+ * @property {boolean|string[]} inheritAttributes - Inherit attributes from headings to TOC links. `true` copies all, `false` copies none, array copies only specified attributes.
  * @property {(toc: string) => string} wrapper - Wrapper function around the generated table of contents.
  */
 
@@ -17,6 +18,7 @@ const defaults = {
 	ignoredHeadings: ['[data-toc-exclude]'],
 	ignoredElements: [],
 	ul: false,
+	inheritAttributes: false,
 	wrapper: function (toc) {
 		return `<nav class="toc">${toc}</nav>`;
 	},
@@ -56,9 +58,14 @@ class Item {
 			 * @type {Record<string, string>}
 			 */
 			this.attributes = { href: `#${el.id}` }; // note: by defining href here, we do allow (intentionally) a user-set attribute href to override the link href.
-			if (el.hasAttributes()) {
+			if (this.options.inheritAttributes && el.hasAttributes()) {
 				for (let attribute of el.attributes) {
 					if (['id'].includes(attribute.name)) continue; // skip id attribute
+					if (
+						Array.isArray(this.options.inheritAttributes) &&
+						!this.options.inheritAttributes.includes(attribute.name)
+					)
+						continue;
 					this.attributes[attribute.name] = attribute.value;
 				}
 			}
