@@ -123,6 +123,8 @@ Or override as it's being invoked:
 
 If you have specific headings which you don't want to be included in the TOC, you can add one of the `ignoredHeadings` selectors to exclude these headings (defaults to the`[data-toc-exclude]` selector).
 
+Set `inheritAttributes` to `true` to copy heading attributes to TOC links, or provide an array of attribute names (e.g. `['data-value']`) to copy only specific ones.
+
 One way to add this attribute is via the use of the [markdown-it-attrs](https://www.npmjs.com/package/markdown-it-attrs) plugin:
 
 ```md
