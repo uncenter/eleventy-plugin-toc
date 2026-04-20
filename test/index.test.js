@@ -201,13 +201,41 @@ test('the README example works', () => {
 	expect(results.children[1].content).toBe('Greetings from Pluto');
 });
 
-test('attributes on headings are preserved', () => {
-	const toc = new Toc(/* html */ `
+test('inherits heading attributes when enabled', () => {
+	const toc = new Toc(
+		/* html */ `
         <h2 data-highlight="true" id="foo">Foo</h2>
         <h2 style="color: red;" id="bar">Bar</h2>
-    `);
+    `,
+		{ inheritAttributes: true },
+	);
 	const html = toc.html();
 	expect(html.replace(/\n/g, '')).toBe(
 		/* html */ `<nav class="toc"><ol><li><a href="#foo" data-highlight="true">Foo</a></li><li><a href="#bar" style="color: red;">Bar</a></li></ol></nav>`,
+	);
+});
+
+test('ignores heading attributes by default', () => {
+	const toc = new Toc(/* html */ `
+        <h2 id="foo" class="baz">Foo</h2>
+        <h2 id="bar" data-test="value">Bar</h2>
+    `);
+	const html = toc.html();
+	expect(html.replace(/\n/g, '')).toBe(
+		/* html */ `<nav class="toc"><ol><li><a href="#foo">Foo</a></li><li><a href="#bar">Bar</a></li></ol></nav>`,
+	);
+});
+
+test('inherits only specified heading attributes', () => {
+	const toc = new Toc(
+		/* html */ `
+        <h2 id="foo" class="baz" data-foo="1">Foo</h2>
+        <h2 id="bar" class="qux" data-bar="2">Bar</h2>
+    `,
+		{ inheritAttributes: ['data-foo'] },
+	);
+	const html = toc.html();
+	expect(html.replace(/\n/g, '')).toBe(
+		/* html */ `<nav class="toc"><ol><li><a href="#foo" data-foo="1">Foo</a></li><li><a href="#bar">Bar</a></li></ol></nav>`,
 	);
 });
